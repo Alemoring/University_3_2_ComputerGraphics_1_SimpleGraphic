@@ -39,6 +39,7 @@ def draw_shapes(screen):
     
 class Drawer:
     def __init__(self):
+        self.size = 100
         self.drawing = False
         self.last_pos = None
         self.ellips_color = (100, 100, 100)
@@ -51,16 +52,23 @@ class Drawer:
                     if event.pos[1] > 50 or event.pos[0] > 50 * len(list_colors):
                         self.drawing = True
                         self.last_pos = event.pos
-                        rect = pygame.Rect(event.pos[0] - 50, event.pos[1] - 100, 100, 200)
+                        rect = pygame.Rect(event.pos[0] - self.size/2, event.pos[1] - self.size, self.size, self.size * 2)
                         pygame.draw.ellipse(screen, self.ellips_color, rect)
                     self.ellips_color = screen.get_at(event.pos)
-                else:
-                    # save_image(screen)
+                elif event.button == 2:
                     screen.fill(THECOLORS['white'])
                     draw_shapes(screen)
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_s and pygame.key.get_mods() & pygame.KMOD_LCTRL:
                     save_image(screen)
+            if event.type == pygame.MOUSEWHEEL: # up - y = -1; down - y = 1
+                if self.size >= 1:
+                    if event.y == -1:
+                        self.size += 1
+                        print(self.size)
+                    elif self.size != 1:
+                        self.size -= 1
+                        print(self.size)
         return True
 
 def save_image(screen):
